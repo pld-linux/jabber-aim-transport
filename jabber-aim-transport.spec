@@ -13,9 +13,15 @@ Source3:	jabber-aimtrans.sysconfig
 Source4:	aimtrans.xml
 # Source0-md5:	36da37c11b3addff7bde0d40b5f03514
 URL:		http://www.jabber.org/
+BuildRequires:	autoconf
 BuildRequires:	jabberd14-devel
-%requires_eq	jabberd14
 BuildRequires:	pth-devel
+PreReq:		rc-scripts
+Requires(post):	jabber-common
+Requires(post):	perl-base
+Requires(post):	textutils
+Requires(post,preun):	/sbin/chkconfig
+%requires_eq	jabberd14
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -30,7 +36,8 @@ u¿ytkownikami AIM.
 
 %build
 %{__autoconf}
-%configure --with-jabberd=/usr/include/jabberd14/
+%configure \
+	--with-jabberd=/usr/include/jabberd14/
 %{__make}
 
 %install
