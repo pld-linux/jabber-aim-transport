@@ -4,7 +4,7 @@ Summary:	AIM transport module for Jabber
 Summary(pl):	Modu³ transportowy AIM dla systemu Jabber
 Name:		jabber-aim-transport
 Version:	0
-Release:	0.%{cvs}.4
+Release:	0.%{cvs}.5
 License:	distributable
 Group:		Applications/Communications
 Source0:	http://aim-transport.jabberstudio.org/aim-transport-%{branch}-%{cvs}.tar.gz
@@ -35,6 +35,7 @@ u¿ytkownikami AIM.
 %setup -qn aim-transport-%{branch}-%{cvs}
 
 %build
+cp -f /usr/share/automake/config.sub .
 %{__autoconf}
 %configure \
 	--with-jabberd=/usr/include/jabberd14/
