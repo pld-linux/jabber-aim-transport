@@ -1,17 +1,17 @@
-%define cvs 20030412
-%define branch testing
+%define cvs 20040131
+%define branch stable
 Summary:	AIM transport module for Jabber
 Summary(pl):	Modu³ transportowy AIM dla systemu Jabber
 Name:		jabber-aim-transport
 Version:	0
-Release:	0.%{cvs}.5
+Release:	0.%{cvs}.1
 License:	distributable
 Group:		Applications/Communications
-Source0:	http://aim-transport.jabberstudio.org/aim-transport-%{branch}-%{cvs}.tar.gz
+Source0:	http://aim-transport.jabberstudio.org/aim-transport-%{branch}-%{cvs}b.tar.gz
+# Source0-md5:	804469a50824691adcfa2cec71dbf6df
 Source2:	jabber-aimtrans.init
 Source3:	jabber-aimtrans.sysconfig
 Source4:	aimtrans.xml
-# Source0-md5:	36da37c11b3addff7bde0d40b5f03514
 URL:		http://www.jabber.org/
 BuildRequires:	autoconf
 BuildRequires:	jabberd14-devel
