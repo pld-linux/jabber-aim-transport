@@ -4,7 +4,7 @@ Summary:	AIM transport module for Jabber
 Summary(pl):	Modu³ transportowy AIM dla systemu Jabber
 Name:		jabber-aim-transport
 Version:	0
-Release:	0.%{cvs}.3
+Release:	0.%{cvs}.4
 License:	distributable
 Group:		Applications/Communications
 Source0:	http://aim-transport.jabberstudio.org/aim-transport-%{branch}-%{cvs}.tar.gz
