@@ -4,14 +4,17 @@ Summary:	AIM transport module for Jabber
 Summary(pl):	Modu³ transportowy AIM dla systemu Jabber
 Name:		jabber-aim-transport
 Version:	0
-Release:	0.%{cvs}.1
+Release:	0.%{cvs}.3
 License:	distributable
 Group:		Applications/Communications
 Source0:	http://aim-transport.jabberstudio.org/aim-transport-%{branch}-%{cvs}.tar.gz
+Source2:	jabber-aimtrans.init
+Source3:	jabber-aimtrans.sysconfig
+Source4:	aimtrans.xml
 # Source0-md5:	36da37c11b3addff7bde0d40b5f03514
 URL:		http://www.jabber.org/
-BuildRequires:	jabber-devel
-%requires_eq	jabber
+BuildRequires:	jabberd14-devel
+%requires_eq	jabberd14
 BuildRequires:	pth-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -27,39 +30,50 @@ u¿ytkownikami AIM.
 
 %build
 %{__autoconf}
-%configure --with-jabberd=/usr/include/jabberd/
+%configure --with-jabberd=/usr/include/jabberd14/
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_libdir},%{_sysconfdir}}/jabberd
+install -d $RPM_BUILD_ROOT{%{_libdir}/jabberd14,%{_sysconfdir}/jabber} \
+	$RPM_BUILD_ROOT{%{_sbindir},/etc/{rc.d/init.d,sysconfig}}
 
-install src/aimtrans.so $RPM_BUILD_ROOT%{_libdir}/jabberd
-install aim.xml $RPM_BUILD_ROOT%{_sysconfdir}/jabberd/aimtrans.xml
+install src/aimtrans.so $RPM_BUILD_ROOT%{_libdir}/jabberd14
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/jabber-aimtrans
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/jabber-aimtrans
+install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/jabber/aimtrans.xml
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
-if [ -r /var/lock/subsys/jabberd ]; then
-	if [ -r /var/lock/subsys/jabber-aimtrans ]; then
-		/etc/rc.d/init.d/jabberd restart aimtrans >&2
-	else
-		echo "Run \"/etc/rc.d/init.d/jabberd start aimtrans\" to start AIM transport."
+if [ -f /etc/jabber/secret ] ; then
+	SECRET=`cat /etc/jabber/secret`
+	if [ -n "$SECRET" ] ; then
+        	echo "Updating component authentication secret in the config file..."
+		perl -pi -e "s/>secret</>$SECRET</" /etc/jabber/aimtrans.xml
 	fi
+fi
+
+/sbin/chkconfig --add jabber-aimtrans
+if [ -r /var/lock/subsys/jabber-aimtrans ]; then
+	/etc/rc.d/init.d/jabber-aimtrans restart >&2
 else
-	echo "Run \"/etc/rc.d/init.d/jabberd start\" to start Jabber server."
+	echo "Run \"/etc/rc.d/init.d/jabber-aimtrans start\" to start Jabber aim transport."
 fi
 
 %preun
 if [ "$1" = "0" ]; then
 	if [ -r /var/lock/subsys/jabber-aimtrans ]; then
-		/etc/rc.d/init.d/jabberd stop aimtrans >&2
+		/etc/rc.d/init.d/jabber-aimtrans stop >&2
 	fi
+	/sbin/chkconfig --del jabber-aimtrans
 fi
 
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog README TODO
-%attr(755,root,root) %{_libdir}/jabberd/*
-%attr(640,root,jabber) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/jabberd/*
+%attr(755,root,root) %{_libdir}/jabberd14/*
+%attr(640,root,jabber) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/jabber/*
+%attr(754,root,root) /etc/rc.d/init.d/jabber-aimtrans
+%config(noreplace) %verify(not size mtime md5) /etc/sysconfig/jabber-aimtrans

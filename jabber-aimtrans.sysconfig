@@ -1,0 +1,5 @@
+# Customized setings for jabber-aim-transport
+
+# Define nice level for jabber-aim-transport 
+SERVICE_RUN_NICE_LEVEL="+5"
+
