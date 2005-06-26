@@ -14,8 +14,8 @@ Source3:	jabber-aimtrans.sysconfig
 Source4:	aimtrans.xml
 URL:		http://www.jabber.org/
 BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	jabberd14-devel
-BuildRequires:	pth-devel
 PreReq:		rc-scripts
 Requires(post):	jabber-common
 Requires(post):	perl-base
@@ -82,6 +82,6 @@ fi
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog README TODO
 %attr(755,root,root) %{_libdir}/jabberd14/*
-%attr(640,root,jabber) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/jabber/*
+%attr(640,root,jabber) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/jabber/*
 %attr(754,root,root) /etc/rc.d/init.d/jabber-aimtrans
-%config(noreplace) %verify(not size mtime md5) /etc/sysconfig/jabber-aimtrans
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/jabber-aimtrans
