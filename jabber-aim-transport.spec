@@ -16,9 +16,9 @@ URL:		http://www.jabber.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	jabberd14-devel
-PreReq:		rc-scripts
+BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(post):	jabber-common
-Requires(post):	perl-base
+Requires(post):	sed >= 4.0
 Requires(post):	textutils
 Requires(post,preun):	/sbin/chkconfig
 %requires_eq	jabberd14
@@ -38,7 +38,7 @@ u¿ytkownikami AIM.
 cp -f /usr/share/automake/config.sub .
 %{__autoconf}
 %configure \
-	--with-jabberd=/usr/include/jabberd14/
+	--with-jabberd=/usr/include/jabberd14
 %{__make}
 
 %install
@@ -55,26 +55,20 @@ install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/jabber/aimtrans.xml
 rm -rf $RPM_BUILD_ROOT
 
 %post
-if [ -f /etc/jabber/secret ] ; then
-	SECRET=`cat /etc/jabber/secret`
+if [ -f %{_sysconfdir}/jabber/secret ] ; then
+	SECRET=`cat %{_sysconfdir}/jabber/secret`
 	if [ -n "$SECRET" ] ; then
-        	echo "Updating component authentication secret in the config file..."
-		perl -pi -e "s/>secret</>$SECRET</" /etc/jabber/aimtrans.xml
+		echo "Updating component authentication secret in the config file..."
+		%{__sed} -i -e "s/>secret</>$SECRET</" %{_sysconfdir}/jabber/aimtrans.xml
 	fi
 fi
 
 /sbin/chkconfig --add jabber-aimtrans
-if [ -r /var/lock/subsys/jabber-aimtrans ]; then
-	/etc/rc.d/init.d/jabber-aimtrans restart >&2
-else
-	echo "Run \"/etc/rc.d/init.d/jabber-aimtrans start\" to start Jabber aim transport."
-fi
+%service jabber-aimtrans restart "Jabber aim transport"
 
 %preun
 if [ "$1" = "0" ]; then
-	if [ -r /var/lock/subsys/jabber-aimtrans ]; then
-		/etc/rc.d/init.d/jabber-aimtrans stop >&2
-	fi
+	%service jabber-aimtrans stop
 	/sbin/chkconfig --del jabber-aimtrans
 fi
 
