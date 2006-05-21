@@ -16,6 +16,7 @@ URL:		http://www.jabber.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	jabberd14-devel
+BuildRequires:	pth-devel
 BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(post):	jabber-common
 Requires(post):	sed >= 4.0
