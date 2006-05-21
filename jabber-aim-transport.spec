@@ -1,6 +1,6 @@
 %define cvs 20040131
 %define branch stable
-%define		_rel	2
+%define		_rel	3
 Summary:	AIM transport module for Jabber
 Summary(pl):	Modu³ transportowy AIM dla systemu Jabber
 Name:		jabber-aim-transport
