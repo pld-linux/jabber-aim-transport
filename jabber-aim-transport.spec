@@ -2,7 +2,7 @@
 %define branch stable
 %define		_rel	3
 Summary:	AIM transport module for Jabber
-Summary(pl.UTF-8):   Moduł transportowy AIM dla systemu Jabber
+Summary(pl.UTF-8):	Moduł transportowy AIM dla systemu Jabber
 Name:		jabber-aim-transport
 Version:	0
 Release:	0.%{cvs}.%{_rel}
